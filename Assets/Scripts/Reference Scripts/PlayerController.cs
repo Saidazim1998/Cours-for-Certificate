@@ -51,6 +51,8 @@ public class PlayerController : MonoBehaviour
 
     private Animator animator;
 
+    public PlayerDamage playerDamage;
+
    // private PlayerDamage playerDamage;
 
 
@@ -60,13 +62,12 @@ public class PlayerController : MonoBehaviour
         // grabs references to components
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
-        
-        //playerDamage = GetComponent<PlayerDamage>();
+        playerDamage = GetComponent<PlayerDamage>();
     }
 
     private void Update()
     {
-        if (isMoving)
+        if (isMoving && !playerDamage.hurt)
         {
             bool onGround = Physics.Linecast(transform.position, groundCheck.position, groundLayers);
            // animator.SetBool("grounded", onGround);
@@ -89,7 +90,7 @@ public class PlayerController : MonoBehaviour
     {
         ControlSpeed();
 
-        if (isMoving)
+        if (isMoving && !playerDamage.hurt)
         {
             // increase or decrease the players speed depending on how much they are facing downhill
             float turnAngle = Mathf.Abs(180 - transform.eulerAngles.y);

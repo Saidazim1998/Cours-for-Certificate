@@ -46,7 +46,7 @@ public class PlayerDamage : MonoBehaviour
             // sends the player up and back from bumping into an obstacle
             rb.AddForce(transform.forward * -knockbackForce);
             rb.AddForce(transform.up * 500);
-            StartCoroutine("Recover");
+            StartCoroutine(nameof(Recover));
         }
     }
 
