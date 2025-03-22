@@ -1,57 +1,58 @@
-﻿using System;
+using System;
 using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
-
 
 public class RaceTimer : MonoBehaviour
 {
+    public bool isRaceStarted = false;
 
-    public bool raceStarted = false;
+    public TextMeshProUGUI raceTimerText;
+    public GameObject mainMenu;
     public static float time = 0;
-    private TimeSpan timePlaying;
+    public TimeSpan playingTime;
 
-    private float[] savedTimes = { 0, 0, 0, 0, 0 };
-
- 
     private void OnEnable()
     {
-        GameEvents.OnRaceStart += StartTimer;
-        GameEvents.OnRaceStop += StopTimer;
-    
+        GameEvents.OnStartRaceEvent += StartTimer;
+        GameEvents.OnStopRaceEvent += StopTimer;
     }
 
     private void OnDisable()
     {
-        GameEvents.OnRaceStart -= StartTimer;
-        GameEvents.OnRaceStop -= StopTimer;     
+        GameEvents.OnStartRaceEvent -= StartTimer;
+        GameEvents.OnStopRaceEvent -= StopTimer;
     }
-
 
     private void StartTimer()
     {
         time = 0;
-        StartCoroutine("Timer");
-        raceStarted = true;
+        // Start timer
+        StartCoroutine(nameof(Timer));
+        isRaceStarted = true;
     }
 
-    public void StopTimer()
+    private void StopTimer()
     {
-        if (raceStarted)
+        if (isRaceStarted)
         {
-            StopCoroutine("Timer");
-            print("RACE TIME: "+timePlaying.ToString("mm':'ss':'ff"));       
+            // Stop timer
+            StopCoroutine(nameof(Timer));
+            // print result
+            raceTimerText.text = playingTime.ToString("mm':'ss':'ff");
+            mainMenu.SetActive(true);
+            print("Race Timer:"+playingTime.ToString("mm':'ss':'ff"));
         }
     }
 
-    private IEnumerator Timer()
+    IEnumerator Timer()
     {
         while (true)
         {
             time += Time.deltaTime;
-            timePlaying = TimeSpan.FromSeconds(time);
+            playingTime = TimeSpan.FromSeconds(time);
             yield return null;
         }
+      
     }
-
 }
